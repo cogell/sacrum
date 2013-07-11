@@ -3,10 +3,10 @@ DOCUMENTATION UNFINISHED
 
 TODO
 ====
--Add support for coffee
--Add support for stylus
--Write better documentation
--Write out a build command in Gruntfile.js
+- Add support for coffee
+- Add support for stylus
+- Write better documentation
+- Write out a build command in Gruntfile.js
 
 Getting Started - Advanced 
 --------------------------
@@ -31,20 +31,20 @@ The main file is located at the root, named Gruntfile.js.
 
 JavaScript Libraries
 --------------------
--jQuery
--Underscore
--Backbone
--Backbone.Marionette
--Handlebars
--RequireJS
--RequireJS.Text
+- jQuery
+- Underscore
+- Backbone
+- Backbone.Marionette
+- Handlebars
+- RequireJS
+- RequireJS.Text
 
 Node Modules
 ------------
--grunt
--grunt-contrib-*
--grunt-open
--grunt-rev
--grunt-template-jasmine-requirejs
--grunt-usemin
--matchdep
+- grunt
+- grunt-contrib-*
+- grunt-open
+- grunt-rev
+- grunt-template-jasmine-requirejs
+- grunt-usemin
+- matchdep
