@@ -6,9 +6,9 @@ define(function(require){
   var ListShowSeed = require('primatives/modules/ListShow');
   var _post = require('text!apps/blog/posts-refactor/templates/_post.html');
 
-  App.module("PostsRefactor", ListShowSeed);
+  App.module("Blog.PostsRefactor", ListShowSeed);
 
-  return App.module('PostsRefactor', function(PostsRefactor){
+  return App.module('Blog.PostsRefactor', function(PostsRefactor){
 
       ///////////////////
      // CONFIGURATION //

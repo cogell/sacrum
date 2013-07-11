@@ -4,9 +4,9 @@ define(function(require){
   var DisplaySeed = require('primatives/Display');
   var _header = require('text!apps/blog/header-refactor/templates/_header.html');
 
-  App.module('HeaderRefactor', DisplaySeed);
+  App.module('Blog.HeaderRefactor', DisplaySeed);
 
-  return App.module('HeaderRefactor', function(HeaderRefactor){
+  return App.module('Blog.HeaderRefactor', function(HeaderRefactor){
 
     // CONFIGURATION
     HeaderRefactor.showRegion = App.headerRegion;

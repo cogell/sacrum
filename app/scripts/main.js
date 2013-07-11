@@ -6,7 +6,7 @@ require(['requireConfig'],function(){
     'apps/admin/admin-app'
     ],
     function(App){
-    App.start();
+      App.start();
   });
 
 });

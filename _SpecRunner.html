@@ -163,7 +163,7 @@
       
     ],
     function(){
-      require(['test/spec/headerSpec.js','test/spec/testSpec.js','test/spec/vendorSpec.js','.grunt/grunt-contrib-jasmine/reporter.js'], function(){
+      require(['test/spec/app/appSpec.js','test/spec/app/blog/header/headerSpec.js','test/spec/app/blog/posts/postSpec.js','test/spec/base/vendorSpec.js','test/spec/testSpec.js','.grunt/grunt-contrib-jasmine/reporter.js'], function(){
         require(['.grunt/grunt-contrib-jasmine/jasmine-helper.js'], function(){
           // good to go! Our tests should already be running.
         })

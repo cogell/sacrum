@@ -49,7 +49,7 @@ module.exports = function (grunt){
 
     connect: {
       options: {
-        port: 9001,
+        port: 9000,
         hostname: 'localhost'
       },
       livereload: {
@@ -58,7 +58,6 @@ module.exports = function (grunt){
             return [
               lrSnippet,
               mountFolder(connect, '.tmp'),
-              // mountFolder(connect, '<%= sacrum.app %>')
               mountFolder(connect, 'app')
             ];
           }
@@ -66,7 +65,20 @@ module.exports = function (grunt){
       },
       test: {
         options: {
-          port: 9000
+          port: 9001
+        }
+      },
+      testBrowser: {
+        options: {
+          port: 9002,
+          middleware: function (connect) {
+            return [
+              lrSnippet,
+              // mountFolder(connect, '.tmp'),
+              // mountFolder(connect, 'app')
+              mountFolder(connect, './')
+            ];
+          }
         }
       }
     },
@@ -75,6 +87,9 @@ module.exports = function (grunt){
     open: {
       server: {
         path: 'http://localhost:<%= connect.options.port %>'
+      },
+      testBrowser: {
+        path: 'http://localhost:<%= connect.testBrowser.options.port %>/_SpecRunner.html'
       }
     },
 
@@ -131,13 +146,13 @@ module.exports = function (grunt){
         src: ['app/scripts/**/*.js', '!app/scripts/vendor/**'],
         options: {
           // test from this ad hoc server // phantomjs always times out
-          // host: 'http://localhost:<%= connect.test.options.port %>',
-          host: 'http://localhost:9000',
-          verbose: true,
+          host: 'http://localhost:<%= connect.test.options.port %>',
+          // host: 'http://localhost:9000',
+          junitPath: './',
 
           // all the testing specs
           specs: 'test/spec/**/*Spec.js',
-          helpers: ['test/spec/helpers/**/*.js', 'test/lib/jasmine-jquery.js'],
+          helpers: ['test/helpers/**/*.js', 'test/lib/jasmine-jquery.js'],
           // option to keep _SpecRunner.html
           keepRunner: true,
 
@@ -187,6 +202,16 @@ module.exports = function (grunt){
     // ADD JS LINT CHECK SOMEWHERE
     'connect:test',
     'jasmine:test'
+  ]);
+
+  // sometimes you want put something in the global scope and play with it
+  grunt.registerTask('test:browser',[
+    // ADD JS LINT CHECK SOMEWHERE
+    'jasmine:test:build',
+    'livereload-start',
+    'connect:testBrowser',
+    'open:testBrowser',
+    'watch'
   ]);
 
 };
