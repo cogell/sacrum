@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jasmine Spec Runner</title>
+
+  
+  <link rel="stylesheet" type="text/css" href="../../.grunt/grunt-contrib-jasmine/jasmine.css">
+  
+
+  <script src=".grunt/grunt-contrib-jasmine/require.js"></script>
+  <script>
+    require.onError = function(error) {
+      var message = error.requireType + ': ';
+      if (error.requireType === 'scripterror' || error.requireType === 'notloaded' && error.requireModules) {
+        message += 'Illegal path or script error: ' + '[\'' + error.requireModules.join("', '") + '\']';
+      } else {
+        message += error.message;
+      }
+
+      throw Error(message);
+    };
+  </script>
+
+  
+  
+  <script src="../../.grunt/grunt-contrib-jasmine/jasmine.js"></script>
+  
+  <script src="../../.grunt/grunt-contrib-jasmine/jasmine-html.js"></script>
+  
+  
+
+  <script>
+    
+      require.config({
+  "paths": {
+    "jquery": "vendor/jquery-2.0.2.min",
+    "underscore": "vendor/underscore",
+    "handlebars": "vendor/handlebars",
+    "backbone": "vendor/backbone",
+    "marionette": "vendor/marionette",
+    "text": "vendor/text"
+  },
+  "shim": {
+    "underscore": {
+      "exports": "_"
+    },
+    "handlebars": {
+      "exports": "Handlebars"
+    },
+    "backbone": {
+      "deps": [
+        "underscore",
+        "jquery"
+      ],
+      "exports": "Backbone"
+    },
+    "marionette": {
+      "deps": [
+        "jquery",
+        "underscore",
+        "backbone"
+      ],
+      "exports": "Backbone.Marionette"
+    }
+  }
+});
+    
+
+    
+      require.config({
+  "baseUrl": "app/scripts/"
+});
+    
+  </script>
+
+  <script>
+    function launchTest() {
+    require([
+      
+        
+        'app' ,
+      
+        
+        'apps/admin/admin-app' ,
+      
+        
+        'apps/admin/header/header-app' ,
+      
+        
+        'apps/admin/header/header-controller' ,
+      
+        
+        'apps/admin/header/header-views' ,
+      
+        
+        'apps/admin/posts/posts-app' ,
+      
+        
+        'apps/admin/posts/posts-controller' ,
+      
+        
+        'apps/admin/posts/posts-entities' ,
+      
+        
+        'apps/admin/posts/posts-views' ,
+      
+        
+        'apps/blog/blog-app' ,
+      
+        
+        'apps/blog/header-refactor/header-refactor' ,
+      
+        
+        'apps/blog/header/header-app' ,
+      
+        
+        'apps/blog/header/header-controller' ,
+      
+        
+        'apps/blog/header/header-views' ,
+      
+        
+        'apps/blog/posts-refactor/posts-refactor' ,
+      
+        
+        'apps/blog/posts/posts-app' ,
+      
+        
+        'apps/blog/posts/posts-controller' ,
+      
+        
+        'apps/blog/posts/posts-entities' ,
+      
+        
+        'apps/blog/posts/posts-views' ,
+      
+        
+        'main' ,
+      
+        
+        'primatives/CRUD' ,
+      
+        
+        'primatives/Display' ,
+      
+        
+        'primatives/ListShow' ,
+      
+        
+        'primatives/Views' ,
+      
+        
+        'primatives/modules/CRUD' ,
+      
+        
+        'primatives/modules/Display' ,
+      
+        
+        'primatives/modules/ListShow' ,
+      
+        
+        'requireConfig' 
+      
+    ],
+    function(){
+      require(['../../test/spec/testSpec.js','../../test/spec/vendorSpec.js','../../.grunt/grunt-contrib-jasmine/reporter.js'], function(){
+        require(['../../.grunt/grunt-contrib-jasmine/jasmine-helper.js'], function(){
+          // good to go! Our tests should already be running.
+        })
+      })
+    }
+    )
+  }
+  </script>
+
+  
+  <script>
+  launchTest();
+  </script>
+  
+</head>
+<body>
+</body>
+</html>
