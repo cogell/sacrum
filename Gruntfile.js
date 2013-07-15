@@ -128,15 +128,12 @@ module.exports = function (grunt){
 
     // COMPILE STYLUS FILES
     stylus: {
-      options: {
-        use: [ require('nib') ],
-        import: [ 'nib' ]
-      },
+      options: {},
       dev: {
         options: {
           compress: false,
           linenos: true
-        }
+        },
         files: {
           '.tmp/styles/main.css' : ['<%= sacrum.app %>/styles/**/*.styl']
         }
@@ -157,10 +154,10 @@ module.exports = function (grunt){
       dev: {
         files: [{
           expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
-          cwd: '<%= sacrum.app %>/scripts',
-          src: '**/*.coffee',
+          // cwd: '<%= sacrum.app %>/scripts',
+          src: '<%= sacrum.app %>/scripts/**/*.coffee',
           dest: '.tmp/scripts',
-          ext: 'js'
+          ext: '.js'
         }]
       },
       dist: {}
@@ -226,11 +223,11 @@ module.exports = function (grunt){
           preserveLicenseComments: true,
           useStrict: false,
           wrap: true,
-          mainConfigFile: ''
+          mainConfigFile: '',
           removeCombined: false,
           findNestedDependencies: true,
           name: 'main',
-          out: 'dist/scripts/main.optimized.js'
+          out: 'dist/scripts/main.optimized.js',
           waitSeconds: 7,
           logLevel: 0
         }
@@ -254,10 +251,14 @@ module.exports = function (grunt){
 
     // CONSIDER WIRING UP CONCURRENT TASKS TO SAVE ON COMPILE TIME
 
+    // UP CONCURRENT TASKS TO SAVE ON COMPILE TIME
+
   });
 
   grunt.registerTask('server',[
     'clean:server',
+    'stylus:dev',
+    'coffee:dev',
     'compass:dev',
     'livereload-start',
     'connect:livereload',
@@ -267,9 +268,9 @@ module.exports = function (grunt){
   ]);
 
   grunt.registerTask('build',[
-    // 'clean:dist'        // clear previous build
+    'clean:dist'        // clear previous build
     // 'coffee:dist'       // compile coffee
-    // 'sass:dist'         // compile sass
+    // 'compass:dist'         // compile sass
     // 'stylus:dist'       // compile stylus
     // 'test'              // run all tests
     // 'requirejs:dist'    // run require optimization
