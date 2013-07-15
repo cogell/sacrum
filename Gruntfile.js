@@ -28,6 +28,14 @@ module.exports = function (grunt){
 
     // WATCH THESE FILES WITH THESE TASKS //
     watch:{
+      stylus: {
+        files: ['<%= sacrum.app %>/styles/**/*.styl'],
+        tasks: ['stylus:dev']
+      },
+      coffee: {
+        files: ['<%= sacrum.app %>/scripts/**/*.coffee'],
+        tasks: ['coffee:dev']
+      },
       compass: {
         files: ['<%= sacrum.app %>/styles/**/*.scss'],
         tasks: ['compass:dev']
@@ -108,15 +116,54 @@ module.exports = function (grunt){
       }
     },
 
-    // LINT ALL FILES
+    // LINT ALL FILES -- // NOT CONFIGURED //
     jshint: {
       options: {
         jshintrc: '.jshintrc'
       },
       all: [
-        'Gruntfile.js',
-
+        'Gruntfile.js'
       ]
+    },
+
+    // COMPILE STYLUS FILES
+    stylus: {
+      options: {
+        use: [ require('nib') ],
+        import: [ 'nib' ]
+      },
+      dev: {
+        options: {
+          compress: false,
+          linenos: true
+        }
+        files: {
+          '.tmp/styles/main.css' : ['<%= sacrum.app %>/styles/**/*.styl']
+        }
+      },
+      dist: {
+        options: {
+          compress: true,
+          linenos: false
+        },
+        files: {
+          'dist/styles/main.css' : ['<%= sacrum.app %>/styles/**/*.styl']
+        }
+      }
+    },
+
+    // COMPILE COFFEE FILES
+    coffee: {
+      dev: {
+        files: [{
+          expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
+          cwd: '<%= sacrum.app %>/scripts',
+          src: '**/*.coffee',
+          dest: '.tmp/scripts',
+          ext: 'js'
+        }]
+      },
+      dist: {}
     },
 
     // COMPILE COMPASS FILES
@@ -165,11 +212,30 @@ module.exports = function (grunt){
           }
         }
       }
-    }
+    },
 
     // //////////
     // COMEBACK AND ADD REQUIRE JS ONCE YOU WANT TO DISTRIBUTE SOMETHING
     // //////////
+
+    requirejs: {
+      dist: {
+        options: {
+          baseUrl: 'dist/scripts',
+          optimize: 'uglify',
+          preserveLicenseComments: true,
+          useStrict: false,
+          wrap: true,
+          mainConfigFile: ''
+          removeCombined: false,
+          findNestedDependencies: true,
+          name: 'main',
+          out: 'dist/scripts/main.optimized.js'
+          waitSeconds: 7,
+          logLevel: 0
+        }
+      }
+    }
 
     // This task adds M5-Hash to the start of all targeted files
     // use this task in conjuction with usemin to src new file names
@@ -186,6 +252,8 @@ module.exports = function (grunt){
     // COMEBACK AND ADD HTML MIN
     // //////////
 
+    // CONSIDER WIRING UP CONCURRENT TASKS TO SAVE ON COMPILE TIME
+
   });
 
   grunt.registerTask('server',[
@@ -196,6 +264,16 @@ module.exports = function (grunt){
     'open:server',
     'test',
     'watch'
+  ]);
+
+  grunt.registerTask('build',[
+    // 'clean:dist'        // clear previous build
+    // 'coffee:dist'       // compile coffee
+    // 'sass:dist'         // compile sass
+    // 'stylus:dist'       // compile stylus
+    // 'test'              // run all tests
+    // 'requirejs:dist'    // run require optimization
+                           // image compression
   ]);
 
   grunt.registerTask('test',[

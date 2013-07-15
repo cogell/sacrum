@@ -2,7 +2,7 @@
   "name": "sacrum",
   "version": "0.0.0",
   "description": "Frontend boilerplate built in marionette",
-  "main" : "Gruntfile.js",
+  "main": "Gruntfile.js",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -23,7 +23,9 @@
     "matchdep": "~0.1.2",
     "grunt-contrib-watch": "~0.4.4",
     "grunt-contrib-jasmine": "~0.5.1",
-    "grunt-template-jasmine-requirejs": "~0.1.2"
+    "grunt-template-jasmine-requirejs": "~0.1.2",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-stylus": "~0.6.0"
   },
   "engines": {
     "node": ">=0.8.0"
