@@ -197,7 +197,6 @@ module.exports = function (grunt){
     },
 
     // COPY FILES FOR TESTING, DEVING AND BUILDING
-
     copy: {
       app2tmp: {
         files: [{
@@ -296,7 +295,8 @@ module.exports = function (grunt){
       }
     },
     usemin: {
-      html: '<%= sacrum.dist %>/**/*.html',
+      html: ['<%= sacrum.dist %>/**/*.html'],
+      css: ['<%= sacrum.dist %>/**/*.css'],
       options: {
         dirs: ['<%= sacrum.dist %>']
       }
@@ -305,7 +305,6 @@ module.exports = function (grunt){
     // ////////// //
     // REQUIRE JS //
     // ////////// //
-
     requirejs: {
       dist: {
         options: {
@@ -325,15 +324,22 @@ module.exports = function (grunt){
       }
     },
 
-
     // This task adds M5-Hash to the start of all targeted files
     // use this task in conjuction with usemin to src new file names
-    // //////////
-    // COMEBACK AND ADD REV
-    // //////////
-    // //////////
-    // COMEBACK AND ADD USEMIN FOR REV
-    // //////////
+    // NOT CONFIGURED
+    rev: {
+      options: {
+        encoding: 'utf8',
+        algorithm: 'sha1',
+        length: 4
+      },
+      files: {
+        src: [
+          '<% sacrum.dist %>/**/*.{js,css,png,jpg}'
+        ]
+      }
+    },
+
     // //////////
     // COMEBACK AND ADD IMAGE MIN
     // //////////
