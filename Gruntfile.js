@@ -103,6 +103,14 @@ module.exports = function (grunt){
     // DESTROYS CERTAIN FOLDERS
     clean: {
       server: '.tmp',
+      tmp: {
+        files: [{
+          dot: true,
+          src: [
+            '.tmp'
+          ]
+        }]
+      },
       dist: {
         files: [{
           dot: true,
@@ -192,6 +200,7 @@ module.exports = function (grunt){
           cwd: 'app',
           dest: '.tmp',
           src: [
+            'assets/**',
             'scripts/**/*.js',
             'styles/**/*.css',
             'index.html'
@@ -269,7 +278,38 @@ module.exports = function (grunt){
           logLevel: 0
         }
       }
+    },
+
+    // RUN TASKS CONCURRENTLY
+    concurrent: {
+      devCompile: {
+        tasks: [
+          'stylus:dev',
+          'coffee:dev',
+          'compass:dev'
+        ]
+      },
+      devCopy: {
+        tasks: [
+          'copy:app',
+          'copy:vender'
+        ]
+      },
+      distCompile: {
+        tasks: [
+          'stylus:dist',
+          'coffee:dist',
+          'compass:dist'
+        ]
+      },
+      distCopy: {
+        tasks: [
+          'copy:app',
+          'copy:vender'
+        ]
+      }
     }
+
 
     // This task adds M5-Hash to the start of all targeted files
     // use this task in conjuction with usemin to src new file names
@@ -286,23 +326,12 @@ module.exports = function (grunt){
     // COMEBACK AND ADD HTML MIN
     // //////////
 
-    // CONSIDER WIRING UP CONCURRENT TASKS TO SAVE ON COMPILE TIME
-
-    // UP CONCURRENT TASKS TO SAVE ON COMPILE TIME
-
   });
 
   grunt.registerTask('server',[
-    'clean:server',
-
-    // COMPILE FILES
-    'stylus:dev',
-    'coffee:dev',
-    'compass:dev',
-    // COPY FILES
-    'copy:app',
-    'copy:vendor',
-
+    'clean:tmp',
+    'concurrent:devCompile',
+    'concurrent:devCopy',
     'livereload-start',
     'connect:livereload',
     'open:server',
@@ -311,14 +340,16 @@ module.exports = function (grunt){
   ]);
 
   grunt.registerTask('build',[
-    'clean:dist'        // clear previous build
-    // 'coffee:dist'       // compile coffee
-    // 'compass:dist'         // compile sass
-    // 'stylus:dist'       // compile stylus
-    // 'test'              // run all tests
-    // 'requirejs:dist'    // run require optimization
-                           // image compression
+    'clean:dist'               // clear previous build
+    'concurrent:devCompile',   // compile all files
+    'concurrent:devCopy',      // copy all targeted files to sacrum.dist
+    // 'stylus:dist'           // compile stylus
+    // 'test'                  // run all tests
+    // 'requirejs:dist'        // run require optimization
+                               // image compression
   ]);
+
+  // CREATE A SERVER BUILD TASK
 
   grunt.registerTask('test',[
     // ADD JS LINT CHECK SOMEWHERE
