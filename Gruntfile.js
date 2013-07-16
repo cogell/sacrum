@@ -67,7 +67,8 @@ module.exports = function (grunt){
           middleware: function (connect) {
             return [
               lrSnippet,
-              mountFolder(connect, '.tmp')
+              mountFolder(connect, '.tmp'),
+              mountFolder(connect, 'dist'),  // breaks sacrumConfig if changed
             ];
           }
         }
@@ -115,7 +116,6 @@ module.exports = function (grunt){
         files: [{
           dot: true,
           src: [
-            '.tmp',
             '<%= sacrum.dist %>/*',
             '<%= sacrum.dist %>/.git*' // dont know if this is necessary
           ]
@@ -161,13 +161,19 @@ module.exports = function (grunt){
       dev: {
         files: [{
           expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
-          // cwd: '<%= sacrum.app %>/scripts',
           src: '<%= sacrum.app %>/scripts/**/*.coffee',
           dest: '.tmp/scripts',
           ext: '.js'
         }]
       },
-      dist: {}
+      dist: {
+        files: [{
+          expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
+          src: '<%= sacrum.app %>/scripts/**/*.coffee',
+          dest: 'dist/scripts',
+          ext: '.js'
+        }]
+      }
     },
 
     // COMPILE COMPASS FILES
@@ -193,10 +199,9 @@ module.exports = function (grunt){
     // COPY FILES FOR TESTING, DEVING AND BUILDING
 
     copy: {
-      app: {
+      app2tmp: {
         files: [{
-          expand: true,
-          dot: true,
+          expand: true, dot: true,
           cwd: 'app',
           dest: '.tmp',
           src: [
@@ -207,23 +212,48 @@ module.exports = function (grunt){
           ]
         }]
       },
-      vendor: {
+      app2dist: {
+        files: [{
+          expand: true, dot: true,
+          cwd: 'app',
+          dest: '<%= sacrum.dist %>',
+          src: [
+            'assets/**',
+            'scripts/**/*.js',
+            'styles/**/*.css',
+            'index.html'
+          ]
+        }]
+      },
+      vendor2tmp: {
         files: [
           {
-            expand: true,
-            dot: true,
-            flatten: true,
+            expand: true, dot: true, flatten: true,
             cwd: 'vendor',
             src: 'scripts/**/*.js',
             dest: '.tmp/scripts/vendor'
           },
           {
-            expand: true,
-            dot: true,
-            flatten: true,
+            expand: true, dot: true, flatten: true,
             cwd: 'vendor',
             src: 'styles/**/*.css',
             dest: '.tmp/styles/vendor'
+          }
+        ]
+      },
+      vendor2dist: {
+        files: [
+          {
+            expand: true, dot: true, flatten: true,
+            cwd: 'vendor',
+            src: 'scripts/**/*.js',
+            dest: '<%= sacrum.dist %>/scripts/vendor'
+          },
+          {
+            expand: true, dot: true, flatten: true,
+            cwd: 'vendor',
+            src: 'styles/**/*.css',
+            dest: '<%= sacrum.dist %>/styles/vendor'
           }
         ]
       }
@@ -257,58 +287,43 @@ module.exports = function (grunt){
       }
     },
 
-    // //////////
-    // COMEBACK AND ADD REQUIRE JS ONCE YOU WANT TO DISTRIBUTE SOMETHING
-    // //////////
+
+    // USEMIN updates index.html file with optimized/minified file names
+    useminPrepare: {
+      html: '<%= sacrum.app %>/index.html',
+      options: {
+        dest: '<%= sacrum.dist %>'
+      }
+    },
+    usemin: {
+      html: '<%= sacrum.dist %>/**/*.html',
+      options: {
+        dirs: ['<%= sacrum.dist %>']
+      }
+    },
+
+    // ////////// //
+    // REQUIRE JS //
+    // ////////// //
 
     requirejs: {
       dist: {
         options: {
-          baseUrl: 'dist/scripts',
+          baseUrl: '<%= sacrum.dist %>/scripts',
           optimize: 'uglify',
           preserveLicenseComments: true,
           useStrict: false,
           wrap: true,
-          mainConfigFile: '',
-          removeCombined: false,
+          mainConfigFile: '<%= sacrum.dist %>/scripts/requireConfig.js',
+          removeCombined: true,
           findNestedDependencies: true,
           name: 'main',
-          out: 'dist/scripts/main.optimized.js',
+          out: '<%= sacrum.dist %>/scripts/main.optimized.js',
           waitSeconds: 7,
           logLevel: 0
         }
       }
     },
-
-    // RUN TASKS CONCURRENTLY
-    concurrent: {
-      devCompile: {
-        tasks: [
-          'stylus:dev',
-          'coffee:dev',
-          'compass:dev'
-        ]
-      },
-      devCopy: {
-        tasks: [
-          'copy:app',
-          'copy:vender'
-        ]
-      },
-      distCompile: {
-        tasks: [
-          'stylus:dist',
-          'coffee:dist',
-          'compass:dist'
-        ]
-      },
-      distCopy: {
-        tasks: [
-          'copy:app',
-          'copy:vender'
-        ]
-      }
-    }
 
 
     // This task adds M5-Hash to the start of all targeted files
@@ -326,9 +341,40 @@ module.exports = function (grunt){
     // COMEBACK AND ADD HTML MIN
     // //////////
 
+    // RUN TASKS CONCURRENTLY
+    concurrent: {
+      devCompile: {
+        tasks: [
+          'stylus:dev',
+          'coffee:dev',
+          'compass:dev'
+        ]
+      },
+      devCopy: {
+        tasks: [
+          'copy:app2tmp',
+          'copy:vendor2tmp'
+        ]
+      },
+      distCompile: {
+        tasks: [
+          'stylus:dist',
+          'coffee:dist',
+          'compass:dist'
+        ]
+      },
+      distCopy: {
+        tasks: [
+          'copy:app2dist',
+          'copy:vendor2dist'
+        ]
+      }
+    }
+
   });
 
   grunt.registerTask('server',[
+    'clean:dist',
     'clean:tmp',
     'concurrent:devCompile',
     'concurrent:devCopy',
@@ -340,26 +386,30 @@ module.exports = function (grunt){
   ]);
 
   grunt.registerTask('build',[
-    'clean:dist'               // clear previous build
-    'concurrent:devCompile',   // compile all files
-    'concurrent:devCopy',      // copy all targeted files to sacrum.dist
-    // 'stylus:dist'           // compile stylus
-    // 'test'                  // run all tests
-    // 'requirejs:dist'        // run require optimization
-                               // image compression
+    'clean:dist',               // clear previous build
+    'concurrent:distCompile',   // compile all files
+    'concurrent:distCopy',      // copy all targeted files to sacrum.dist
+    'useminPrepare',
+    'test',                     // run all tests
+    'requirejs:dist',           // run require optimization
+    'usemin'
+                                // image compression
+                                // clear out unwanted folders left over from optimization
   ]);
 
   // CREATE A SERVER BUILD TASK
 
+  // This task runs starts up a server and
+  // runs all the tests specs written in the test folder
   grunt.registerTask('test',[
     // ADD JS LINT CHECK SOMEWHERE
-    'copy:app',
-    'copy:vendor',
+    'concurrent:devCopy',
     'connect:test',
     'jasmine:test'
   ]);
 
-  // sometimes you want put something in the global scope and play with it
+  // sometimes you want console log an object from a test spec
+  // and play with it in the browser console
   grunt.registerTask('test:browser',[
     // ADD JS LINT CHECK SOMEWHERE
     'jasmine:test:build',
