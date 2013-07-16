@@ -62,18 +62,20 @@ module.exports = function (grunt){
       },
       livereload: {
         options: {
+          port: 9000,
+          hostname: 'localhost',
           middleware: function (connect) {
             return [
               lrSnippet,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'app')
+              mountFolder(connect, '.tmp')
             ];
           }
         }
       },
       test: {
         options: {
-          port: 9001
+          port: 9001,
+          // middleware: function (connect) { return [ mountFolder(connect, '.tmp') ];}
         }
       },
       testBrowser: {
@@ -81,9 +83,6 @@ module.exports = function (grunt){
           port: 9002,
           middleware: function (connect) {
             return [
-              lrSnippet,
-              // mountFolder(connect, '.tmp'),
-              // mountFolder(connect, 'app')
               mountFolder(connect, './')
             ];
           }
@@ -183,11 +182,49 @@ module.exports = function (grunt){
       }
     },
 
+    // COPY FILES FOR TESTING, DEVING AND BUILDING
+
+    copy: {
+      app: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: 'app',
+          dest: '.tmp',
+          src: [
+            'scripts/**/*.js',
+            'styles/**/*.css',
+            'index.html'
+          ]
+        }]
+      },
+      vendor: {
+        files: [
+          {
+            expand: true,
+            dot: true,
+            flatten: true,
+            cwd: 'vendor',
+            src: 'scripts/**/*.js',
+            dest: '.tmp/scripts/vendor'
+          },
+          {
+            expand: true,
+            dot: true,
+            flatten: true,
+            cwd: 'vendor',
+            src: 'styles/**/*.css',
+            dest: '.tmp/styles/vendor'
+          }
+        ]
+      }
+    },
+
     // RUNS JASMINE SPECS IN HEADLESS PHANTOM
     jasmine: {
       test: {
         // source of all the javascripts files to test (the app's files)
-        src: ['app/scripts/**/*.js', '!app/scripts/vendor/**'],
+        src: ['.tmp/scripts/**/*.js', '!.tmp/scripts/vendor/**'],
         options: {
           // test from this ad hoc server // phantomjs always times out
           host: 'http://localhost:<%= connect.test.options.port %>',
@@ -202,9 +239,9 @@ module.exports = function (grunt){
 
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
-            requireConfigFile: 'app/scripts/requireConfig.js',
+            requireConfigFile: '.tmp/scripts/requireConfig.js',
             requireConfig : {
-              baseUrl: 'app/scripts/'
+              baseUrl: '.tmp/scripts/'
             }
           }
         }
@@ -257,9 +294,15 @@ module.exports = function (grunt){
 
   grunt.registerTask('server',[
     'clean:server',
+
+    // COMPILE FILES
     'stylus:dev',
     'coffee:dev',
     'compass:dev',
+    // COPY FILES
+    'copy:app',
+    'copy:vendor',
+
     'livereload-start',
     'connect:livereload',
     'open:server',
@@ -279,6 +322,8 @@ module.exports = function (grunt){
 
   grunt.registerTask('test',[
     // ADD JS LINT CHECK SOMEWHERE
+    'copy:app',
+    'copy:vendor',
     'connect:test',
     'jasmine:test'
   ]);

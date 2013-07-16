@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "Frontend boilerplate built in marionette",
   "main": "Gruntfile.js",
-  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-copy": "~0.4.1",
