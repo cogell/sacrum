@@ -23,8 +23,8 @@ Thumbs.db
 node_modules/
 
 # Sacrum folder for temporary files.
-tmp/
+.tmp/
 dist/
 _SpecRunner.html
 .grunt
-
+~
