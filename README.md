@@ -4,7 +4,6 @@ DOCUMENTATION UNFINISHED
 TODO
 ====
 - dry up copy tasks 
-- impliment handlebars precompiling -- PARTIALLY IMPLIMENTED
 - wire up use of almond on build (grunt-usemin v2 will support this)
 - Extend documentation
 
@@ -42,10 +41,25 @@ JavaScript Libraries
 Node Modules
 ------------
 - grunt
-- grunt-contrib-*
+- grunt-concurrent
+- grunt-contrib-clean
+- grunt-contrib-coffee
+- grunt-contrib-compass
+- grunt-contrib-connect
+- grunt-contrib-copy
+- grunt-contrib-cssmin
+- grunt-contrib-handlebars
+- grunt-contrib-htmlmin
+- grunt-contrib-imagemin
+- grunt-contrib-jasmine
+- grunt-contrib-jshint
+- grunt-contrib-livereload
+- grunt-contrib-requirejs
+- grunt-contrib-stylus
+- grunt-contrib-uglify
+- grunt-contrib-watch
 - grunt-open
 - grunt-rev
 - grunt-template-jasmine-requirejs
 - grunt-usemin
 - matchdep
-- ...
