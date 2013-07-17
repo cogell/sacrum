@@ -119,7 +119,12 @@ module.exports = function (grunt){
     clean: {
       tmp: '.tmp',
       dist: '<%= sacrum.dist %>',
-      postBuild: [ '<%= sacrum.dist %>/js/vendor', '<%= sacrum.dist %>/js/primatives','<%= sacrum.dist %>/css/vendor' ]
+      postBuild: [
+        '<%= sacrum.dist %>/js/vendor',
+        '<%= sacrum.dist %>/js/primatives',
+        '<%= sacrum.dist %>/js/templates',
+        '<%= sacrum.dist %>/css/vendor'
+      ]
     },
 
     // LINT ALL FILES -- // NOT CONFIGURED //
@@ -336,13 +341,14 @@ module.exports = function (grunt){
     // v2 should support the ability to wire up almond on build
     useminPrepare: {
       html: '<%= sacrum.app %>/index.html',
+      css: '<%= sacrum.app %>/css/main.css',
       options: {
         dest: '<%= sacrum.dist %>'
       }
     },
     usemin: {
-      html: ['<%= sacrum.dist %>/**/*.html'],
-      // css: ['<%= sacrum.dist %>/**/*.css'],
+      html: ['<%= sacrum.dist %>/index.html'],
+      css: ['<%= sacrum.dist %>/css/main.css'],
       options: {
         dirs: ['<%= sacrum.dist %>']
       }
@@ -359,7 +365,7 @@ module.exports = function (grunt){
           preserveLicenseComments: true,
           useStrict: false,
           wrap: true,
-          mainConfigFile: '<%= sacrum.dist %>/js/requireConfig.js',
+        mainConfigFile: '<%= sacrum.dist %>/js/requireConfig.js',
           removeCombined: true,
           findNestedDependencies: true,
           name: 'main',
@@ -381,7 +387,7 @@ module.exports = function (grunt){
       },
       files: {
         src: [
-          '<% sacrum.dist %>/**/*.{js,css,png,jpg}'
+          '<%= sacrum.dist %>/**/*.{js,css,png,jpg}'
         ]
       }
     },
@@ -391,15 +397,33 @@ module.exports = function (grunt){
     // //////////
 
     handlebars: {
-      compile: {
+      dev: {
         options: {
-          namespace: 'JST',
-          amd: true
+          // namespace: 'JST', // this is the default
+          amd: true            // dont really know how this works yet :)
         },
-        files: {
-          ".tmp/js/templates/*.js": [ 'app/**/*.hbs' ]
-          // "path/to/another.js": ["path/to/sources/*.hbs", "path/to/more/*.hbs"]
-        }
+        files: [{
+          expand: true,
+          flatten: true,
+          cwd: 'app/',
+          src: ['**/*.hbs'],
+          dest: '.tmp/js/templates/',
+          ext: '.js'
+        }]
+      },
+      dist: {
+        options: {
+          // namespace: 'JST', // this is the default
+          amd: true            // dont really know how this works yet :)
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          cwd: 'app/',
+          src: ['**/*.hbs'],
+          dest: '<%= sacrum.dist %>/js/templates/',
+          ext: '.js'
+        }]
       }
     },
 
@@ -409,7 +433,8 @@ module.exports = function (grunt){
         tasks: [
           'stylus:dev',
           'coffee:dev',
-          'compass:dev'
+          'compass:dev',
+          'handlebars:dev'
         ]
       },
       devCopy: {
@@ -424,7 +449,8 @@ module.exports = function (grunt){
         tasks: [
           'stylus:dist',
           'coffee:dist',
-          'compass:dist'
+          'compass:dist',
+          'handlebars:dev'
         ]
       },
       distCopy: {
@@ -464,6 +490,7 @@ module.exports = function (grunt){
     'useminPrepare',
     'test',                     // run all tests
     'requirejs:dist',           // run require optimization
+    'rev',
     'usemin',
                                 // image compression
     'clean:postBuild'           // clear out unwanted folders left over from optimization
@@ -472,15 +499,7 @@ module.exports = function (grunt){
   // CREATE A SERVER BUILD TASK
 
   grunt.registerTask('build:server',[
-    'clean:dist',               // clear previous build
-    'concurrent:distCompile',   // compile all files
-    'concurrent:distCopy',      // copy all targeted files to sacrum.dist
-    'useminPrepare',
-    'test',                     // run all tests
-    'requirejs:dist',           // run require optimization
-    'usemin',
-                                // image compression
-    'clean:postBuild',          // clear out unwanted folders left over from optimization
+    'build',
 
     'livereload-start',
     'connect:build',
