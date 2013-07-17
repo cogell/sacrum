@@ -3,8 +3,10 @@ DOCUMENTATION UNFINISHED
 
 TODO
 ====
-- Add support for coffee
-- Add support for stylus
+- index in the assets -- DONE
+- Look into structure of tmp/scripts/app/scripts/... -- DONE
+- Add shit to git ignore -- DONE
+- Add non min js files
 - Write better documentation
 - Write out a build command in Gruntfile.js
 
@@ -48,3 +50,4 @@ Node Modules
 - grunt-template-jasmine-requirejs
 - grunt-usemin
 - matchdep
+- ...

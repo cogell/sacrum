@@ -10,7 +10,6 @@ var mountFolder = function (connect, dir) {
 module.exports = function (grunt){
 
   // LOAD ALL GRUNT TASK LIBS
-	// require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
   require('matchdep').filterDev('grunt-*').forEach(function(str){
     if (str !== 'grunt-template-jasmine-requirejs' ){  // if you dont do this it'll complain about loading up the template
       grunt.loadNpmTasks(str);
@@ -75,8 +74,7 @@ module.exports = function (grunt){
       },
       test: {
         options: {
-          port: 9001,
-          // middleware: function (connect) { return [ mountFolder(connect, '.tmp') ];}
+          port: 9001
         }
       },
       testBrowser: {
@@ -116,8 +114,7 @@ module.exports = function (grunt){
         files: [{
           dot: true,
           src: [
-            '<%= sacrum.dist %>/*',
-            '<%= sacrum.dist %>/.git*' // dont know if this is necessary
+            '<%= sacrum.dist %>'
           ]
         }]
       }
@@ -142,7 +139,7 @@ module.exports = function (grunt){
           linenos: true
         },
         files: {
-          '.tmp/styles/main.css' : ['<%= sacrum.app %>/styles/**/*.styl']
+          '.tmp/css/main.css' : ['<%= sacrum.app %>/styles/**/*.styl']
         }
       },
       dist: {
@@ -151,18 +148,21 @@ module.exports = function (grunt){
           linenos: false
         },
         files: {
-          'dist/styles/main.css' : ['<%= sacrum.app %>/styles/**/*.styl']
+          'dist/css/main.css' : ['<%= sacrum.app %>/styles/**/*.styl']
         }
       }
     },
 
     // COMPILE COFFEE FILES
     coffee: {
+      options: {
+        bare: true
+      },
       dev: {
         files: [{
           expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
           src: '<%= sacrum.app %>/scripts/**/*.coffee',
-          dest: '.tmp/scripts',
+          dest: '.tmp/css',
           ext: '.js'
         }]
       },
@@ -170,7 +170,7 @@ module.exports = function (grunt){
         files: [{
           expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
           src: '<%= sacrum.app %>/scripts/**/*.coffee',
-          dest: 'dist/scripts',
+          dest: 'dist/css',
           ext: '.js'
         }]
       }
@@ -186,31 +186,60 @@ module.exports = function (grunt){
       },
       dev: {
         options: {
-          cssDir: '.tmp/styles'
+          cssDir: '.tmp/css'
         }
       },
       dist: {
         options: {
-          cssDir: '<%= sacrum.dist %>/styles'
+          cssDir: '<%= sacrum.dist %>/css'
         }
       }
     },
 
     // COPY FILES FOR TESTING, DEVING AND BUILDING
+    // can be simplified
     copy: {
-      app2tmp: {
+      assets2tmp: {
+        files: [{
+          expand: true, dot: true,
+          cwd: 'app/assets/',
+          dest: '.tmp',
+          src: '**'
+        }]
+      },
+      scripts2tmp: {
         files: [{
           expand: true, dot: true,
           cwd: 'app',
-          dest: '.tmp',
-          src: [
-            'assets/**',
-            'scripts/**/*.js',
-            'styles/**/*.css',
-            'index.html'
-          ]
+          dest: '.tmp/js/',
+          src: '**/*.js'
         }]
       },
+      styles2tmp: {
+        files: [{
+          expand: true, dot: true,
+          cwd: 'app/styles',
+          dest: '.tmp/css/',
+          src: '**/*.css'
+        }]
+      },
+      vendor2tmp: {
+        files: [
+          {
+            expand: true, dot: true, flatten: true,
+            cwd: 'vendor',
+            src: 'scripts/**/*.js',
+            dest: '.tmp/js/vendor'
+          },
+          {
+            expand: true, dot: true, flatten: true,
+            cwd: 'vendor',
+            src: 'styles/**/*.css',
+            dest: '.tmp/css/vendor'
+          }
+        ]
+      },
+
       app2dist: {
         files: [{
           expand: true, dot: true,
@@ -223,22 +252,6 @@ module.exports = function (grunt){
             'index.html'
           ]
         }]
-      },
-      vendor2tmp: {
-        files: [
-          {
-            expand: true, dot: true, flatten: true,
-            cwd: 'vendor',
-            src: 'scripts/**/*.js',
-            dest: '.tmp/scripts/vendor'
-          },
-          {
-            expand: true, dot: true, flatten: true,
-            cwd: 'vendor',
-            src: 'styles/**/*.css',
-            dest: '.tmp/styles/vendor'
-          }
-        ]
       },
       vendor2dist: {
         files: [
@@ -262,7 +275,7 @@ module.exports = function (grunt){
     jasmine: {
       test: {
         // source of all the javascripts files to test (the app's files)
-        src: ['.tmp/scripts/**/*.js', '!.tmp/scripts/vendor/**'],
+        src: ['.tmp/js/**/*.js', '!.tmp/js/vendor/**'],
         options: {
           // test from this ad hoc server // phantomjs always times out
           host: 'http://localhost:<%= connect.test.options.port %>',
@@ -277,9 +290,9 @@ module.exports = function (grunt){
 
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
-            requireConfigFile: '.tmp/scripts/requireConfig.js',
+            requireConfigFile: '.tmp/js/requireConfig.js',
             requireConfig : {
-              baseUrl: '.tmp/scripts/'
+              baseUrl: '.tmp/js/'
             }
           }
         }
@@ -296,7 +309,7 @@ module.exports = function (grunt){
     },
     usemin: {
       html: ['<%= sacrum.dist %>/**/*.html'],
-      css: ['<%= sacrum.dist %>/**/*.css'],
+      // css: ['<%= sacrum.dist %>/**/*.css'],
       options: {
         dirs: ['<%= sacrum.dist %>']
       }
@@ -324,7 +337,7 @@ module.exports = function (grunt){
       }
     },
 
-    // This task adds M5-Hash to the start of all targeted files
+    // This task adds unqiue content hash to the start of all targeted files
     // use this task in conjuction with usemin to src new file names
     // NOT CONFIGURED
     rev: {
@@ -343,8 +356,9 @@ module.exports = function (grunt){
     // //////////
     // COMEBACK AND ADD IMAGE MIN
     // //////////
+
     // //////////
-    // COMEBACK AND ADD HTML MIN
+    // COMEBACK AND ADD HANDLEBARS PRECOMPILE
     // //////////
 
     // RUN TASKS CONCURRENTLY
@@ -358,7 +372,9 @@ module.exports = function (grunt){
       },
       devCopy: {
         tasks: [
-          'copy:app2tmp',
+          'copy:assets2tmp',
+          'copy:scripts2tmp',
+          'copy:styles2tmp',
           'copy:vendor2tmp'
         ]
       },
@@ -380,7 +396,6 @@ module.exports = function (grunt){
   });
 
   grunt.registerTask('server',[
-    'clean:dist',
     'clean:tmp',
     'concurrent:devCompile',
     'concurrent:devCopy',
@@ -418,6 +433,7 @@ module.exports = function (grunt){
   // and play with it in the browser console
   grunt.registerTask('test:browser',[
     // ADD JS LINT CHECK SOMEWHERE
+    'concurrent:devCopy',
     'jasmine:test:build',
     'livereload-start',
     'connect:testBrowser',
