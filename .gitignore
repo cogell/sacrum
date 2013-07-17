@@ -25,3 +25,4 @@ node_modules/
 # Sacrum folder for temporary files.
 tmp/
 dist/
+_SpecRunner.html
