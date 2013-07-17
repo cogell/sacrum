@@ -3,6 +3,11 @@ DOCUMENTATION UNFINISHED
 
 TODO
 ====
+- make a build server task -- DONE
+- dry up copy tasks 
+- impliment handlebars precompiling -- PARTIALLY IMPLIMENTED
+- impliment rev file naming -- PARTIALLY IMPLIMENTED
+- wire up use of almond on build (grunt-usemin v2 will support this)
 - Extend documentation
 
 Getting Started - Advanced 

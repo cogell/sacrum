@@ -41,7 +41,7 @@ module.exports = function (grunt){
       },
       livereload: {
         files: [
-          '<%= sacrum.app %>/*.html',
+          '<%= sacrum.app %>/assets/*.html',
           '{.tmp,<%= sacrum.app %>}/styles/*.css',
           '<%= sacrum.app %>/scripts/**/*.js',
           '<%= sacrum.app %>/images/*.{png,jpg,jepg,gif,webp,svg}'
@@ -51,6 +51,10 @@ module.exports = function (grunt){
       jasmine: {
         files: ['<%= sacrum.app %>/scripts/**/*.js', 'test/spec/**/*.js'],
         tasks: ['test']
+      },
+      // dummy task to keep the server running on build:server
+      build: {
+        files: ['<%= sacrum.app %>/*.html']
       }
     },
 
@@ -66,8 +70,20 @@ module.exports = function (grunt){
           middleware: function (connect) {
             return [
               lrSnippet,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'dist'),  // breaks sacrumConfig if changed
+              mountFolder(connect, '.tmp')
+            ];
+          }
+        }
+      },
+      build: {
+        options: {
+          port: 9000,
+          hostname: 'localhost',
+          middleware: function (connect) {
+            return [
+              lrSnippet,
+              // mountFolder(connect, '<%= sacrum.dist %>')
+              mountFolder(connect, 'dist')
             ];
           }
         }
@@ -103,7 +119,7 @@ module.exports = function (grunt){
     clean: {
       tmp: '.tmp',
       dist: '<%= sacrum.dist %>',
-      postBuild: [ '<%= sacrum.dist %>/js/vendor', '<%= sacrum.dist %>/js/primatives' ]
+      postBuild: [ '<%= sacrum.dist %>/js/vendor', '<%= sacrum.dist %>/js/primatives','<%= sacrum.dist %>/css/vendor' ]
     },
 
     // LINT ALL FILES -- // NOT CONFIGURED //
@@ -215,6 +231,12 @@ module.exports = function (grunt){
           {
             expand: true, dot: true, flatten: true,
             cwd: 'vendor',
+            src: 'js/require*.js',
+            dest: '.tmp/js/'
+          },
+          {
+            expand: true, dot: true, flatten: true,
+            cwd: 'vendor',
             src: 'js/**/*.js',
             dest: '.tmp/js/vendor'
           },
@@ -253,6 +275,18 @@ module.exports = function (grunt){
       },
       vendor2dist: {
         files: [
+          {
+            expand: true, dot: true, flatten: true,
+            cwd: 'vendor',
+            src: 'js/require*.js',
+            dest: 'dist/js/'
+          },
+          {
+            expand: true, dot: true, flatten: true,
+            cwd: 'vendor',
+            src: 'js/almond*.js',
+            dest: 'dist/js/'
+          },
           {
             expand: true, dot: true, flatten: true,
             cwd: 'vendor',
@@ -299,6 +333,7 @@ module.exports = function (grunt){
 
 
     // USEMIN updates index.html file with optimized/minified file names
+    // v2 should support the ability to wire up almond on build
     useminPrepare: {
       html: '<%= sacrum.app %>/index.html',
       options: {
@@ -355,9 +390,18 @@ module.exports = function (grunt){
     // COMEBACK AND ADD IMAGE MIN
     // //////////
 
-    // //////////
-    // COMEBACK AND ADD HANDLEBARS PRECOMPILE
-    // //////////
+    handlebars: {
+      compile: {
+        options: {
+          namespace: 'JST',
+          amd: true
+        },
+        files: {
+          ".tmp/js/templates/*.js": [ 'app/**/*.hbs' ]
+          // "path/to/another.js": ["path/to/sources/*.hbs", "path/to/more/*.hbs"]
+        }
+      }
+    },
 
     // RUN TASKS CONCURRENTLY
     concurrent: {
@@ -395,7 +439,14 @@ module.exports = function (grunt){
 
   });
 
-  grunt.registerTask('server',[
+  grunt.registerTask('dev',[
+    'clean:tmp',
+    'concurrent:devCompile',
+    'concurrent:devCopy',
+    'test',
+  ]);
+
+  grunt.registerTask('dev:server',[
     'clean:tmp',
     'concurrent:devCompile',
     'concurrent:devCopy',
@@ -420,6 +471,23 @@ module.exports = function (grunt){
 
   // CREATE A SERVER BUILD TASK
 
+  grunt.registerTask('build:server',[
+    'clean:dist',               // clear previous build
+    'concurrent:distCompile',   // compile all files
+    'concurrent:distCopy',      // copy all targeted files to sacrum.dist
+    'useminPrepare',
+    'test',                     // run all tests
+    'requirejs:dist',           // run require optimization
+    'usemin',
+                                // image compression
+    'clean:postBuild',          // clear out unwanted folders left over from optimization
+
+    'livereload-start',
+    'connect:build',
+    'open:server',
+    'watch:build'
+  ]);
+
   // This task runs starts up a server and
   // runs all the tests specs written in the test folder
   grunt.registerTask('test',[
@@ -431,7 +499,7 @@ module.exports = function (grunt){
 
   // sometimes you want console log an object from a test spec
   // and play with it in the browser console
-  grunt.registerTask('test:browser',[
+  grunt.registerTask('test:server',[
     // ADD JS LINT CHECK SOMEWHERE
     'concurrent:devCopy',
     'jasmine:test:build',
