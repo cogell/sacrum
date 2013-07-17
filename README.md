@@ -3,12 +3,7 @@ DOCUMENTATION UNFINISHED
 
 TODO
 ====
-- index in the assets -- DONE
-- Look into structure of tmp/scripts/app/scripts/... -- DONE
-- Add shit to git ignore -- DONE
-- Add non min js files
-- Write better documentation
-- Write out a build command in Gruntfile.js
+- Extend documentation
 
 Getting Started - Advanced 
 --------------------------

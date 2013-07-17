@@ -101,23 +101,9 @@ module.exports = function (grunt){
 
     // DESTROYS CERTAIN FOLDERS
     clean: {
-      server: '.tmp',
-      tmp: {
-        files: [{
-          dot: true,
-          src: [
-            '.tmp'
-          ]
-        }]
-      },
-      dist: {
-        files: [{
-          dot: true,
-          src: [
-            '<%= sacrum.dist %>'
-          ]
-        }]
-      }
+      tmp: '.tmp',
+      dist: '<%= sacrum.dist %>',
+      postBuild: [ '<%= sacrum.dist %>/js/vendor', '<%= sacrum.dist %>/js/primatives' ]
     },
 
     // LINT ALL FILES -- // NOT CONFIGURED //
@@ -197,8 +183,9 @@ module.exports = function (grunt){
     },
 
     // COPY FILES FOR TESTING, DEVING AND BUILDING
-    // can be simplified
+    // DRY THIS UP WITH SOME ARGS AND GRUNT REG TASK //
     copy: {
+      // DEVELOPMENT
       assets2tmp: {
         files: [{
           expand: true, dot: true,
@@ -228,29 +215,40 @@ module.exports = function (grunt){
           {
             expand: true, dot: true, flatten: true,
             cwd: 'vendor',
-            src: 'scripts/**/*.js',
+            src: 'js/**/*.js',
             dest: '.tmp/js/vendor'
           },
           {
             expand: true, dot: true, flatten: true,
             cwd: 'vendor',
-            src: 'styles/**/*.css',
+            src: 'css/**/*.css',
             dest: '.tmp/css/vendor'
           }
         ]
       },
-
-      app2dist: {
+      // BUILD
+      assets2dist: {
+        files: [{
+          expand: true, dot: true,
+          cwd: 'app/assets/',
+          dest: 'dist',
+          src: '**'
+        }]
+      },
+      scripts2dist: {
         files: [{
           expand: true, dot: true,
           cwd: 'app',
-          dest: '<%= sacrum.dist %>',
-          src: [
-            'assets/**',
-            'scripts/**/*.js',
-            'styles/**/*.css',
-            'index.html'
-          ]
+          dest: 'dist/js/',
+          src: '**/*.js'
+        }]
+      },
+      styles2dist: {
+        files: [{
+          expand: true, dot: true,
+          cwd: 'app/styles',
+          dest: 'dist/css/',
+          src: '**/*.css'
         }]
       },
       vendor2dist: {
@@ -258,14 +256,14 @@ module.exports = function (grunt){
           {
             expand: true, dot: true, flatten: true,
             cwd: 'vendor',
-            src: 'scripts/**/*.js',
-            dest: '<%= sacrum.dist %>/scripts/vendor'
+            src: 'js/**/*.js',
+            dest: 'dist/js/vendor'
           },
           {
             expand: true, dot: true, flatten: true,
             cwd: 'vendor',
-            src: 'styles/**/*.css',
-            dest: '<%= sacrum.dist %>/styles/vendor'
+            src: 'css/**/*.css',
+            dest: 'dist/css/vendor'
           }
         ]
       }
@@ -286,7 +284,7 @@ module.exports = function (grunt){
           specs: 'test/spec/**/*Spec.js',
           helpers: ['test/helpers/**/*.js', 'test/lib/jasmine-jquery.js'],
           // option to keep _SpecRunner.html
-          keepRunner: true,
+          keepRunner: false,
 
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
@@ -321,16 +319,16 @@ module.exports = function (grunt){
     requirejs: {
       dist: {
         options: {
-          baseUrl: '<%= sacrum.dist %>/scripts',
+          baseUrl: '<%= sacrum.dist %>/js',
           optimize: 'uglify',
           preserveLicenseComments: true,
           useStrict: false,
           wrap: true,
-          mainConfigFile: '<%= sacrum.dist %>/scripts/requireConfig.js',
+          mainConfigFile: '<%= sacrum.dist %>/js/requireConfig.js',
           removeCombined: true,
           findNestedDependencies: true,
           name: 'main',
-          out: '<%= sacrum.dist %>/scripts/main.optimized.js',
+          out: '<%= sacrum.dist %>/js/main.optimized.js',
           waitSeconds: 7,
           logLevel: 0
         }
@@ -387,7 +385,9 @@ module.exports = function (grunt){
       },
       distCopy: {
         tasks: [
-          'copy:app2dist',
+          'copy:assets2dist',
+          'copy:scripts2dist',
+          'copy:styles2dist',
           'copy:vendor2dist'
         ]
       }
@@ -413,9 +413,9 @@ module.exports = function (grunt){
     'useminPrepare',
     'test',                     // run all tests
     'requirejs:dist',           // run require optimization
-    'usemin'
+    'usemin',
                                 // image compression
-                                // clear out unwanted folders left over from optimization
+    'clean:postBuild'           // clear out unwanted folders left over from optimization
   ]);
 
   // CREATE A SERVER BUILD TASK
