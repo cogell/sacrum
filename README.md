@@ -3,7 +3,6 @@ DOCUMENTATION UNFINISHED
 
 TODO
 ====
-- make a build server task -- DONE
 - dry up copy tasks 
 - impliment handlebars precompiling -- PARTIALLY IMPLIMENTED
 - impliment rev file naming -- PARTIALLY IMPLIMENTED
