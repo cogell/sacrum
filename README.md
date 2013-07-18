@@ -8,15 +8,16 @@ TODO
 - Extend documentation
 
 * * *
+
 Getting Started
 ===============
 
 If you'd like to develope a project using this template be sure to git clone the repo, remove the .git file, and start a new git repositiory.
 
-1. `git clone git@git-lab.evolvingmedia.org:sacrum.git`
-2. `rm -rf .git`
-3. `rename folder`
-4. `git init or follow git-lab instructions`
+1. `git clone git@git-lab.evolvingmedia.org:sacrum.git` clones the repo down to your box
+2. `cd sacrum && rm -rf .git` deletes the folder '.git' with flags -r for recursive and -f for force (a lot of files in .git don't like to be deleted) 
+3. `mv ../sacrum ../new-name` essentially renames the folder to "new-name"
+4. `git init` creates a new git repo or follow git-lab instructions
 
 Getting Started - Advanced 
 --------------------------
@@ -65,6 +66,7 @@ All of the grunt tasks are run in the terminal when you are sitting at the root 
   This task compiles the app for a production environment and creates a server for you to via the built project in your browser. The task also automatically runs the `grunt test` command.
 
 * * *
+
 Sacrum's Structure
 ==================
 
@@ -94,11 +96,13 @@ vendor/
   The node_modules folder contains all the node modules used by the builder (grunt).  This folder and its contents are added once you run `npm install'.  This folder is not tracked in the git repo.
   
 ### test/
-  The test folder
+  The test folder is set up to conduct jasmine tests and the Gruntfile is also configured to support this.  All the test suites are written in files named "*Spec.js" and should be kept in the "test/spec/" folder.  You can create whatever folder structure you would like in there.  The builder will reach recursively down and pull out all files that match the node glob pattern "*Spec.js".
 
 ### vendor/
+  The vendor folder contains all the vendor scripts and styles you want to use.  The "vendor/js/" folder is already filled with many useful libraries. This folder gets copied into ".tmp/js/vendor/" during developement.  And during the dist build process these files are momentarily placed in "dist/js/vendor/" for requirejs to concatenate afterwhich the files are removed.  
 
 * * *
+
 Packages and Libraries Used
 ===========================
 
