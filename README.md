@@ -1,5 +1,5 @@
-DOCUMENTATION UNFINISHED
-========================
+Sacrum Documentation
+====================
 
 TODO
 ====
@@ -19,21 +19,26 @@ If you'd like to develope a project using this template be sure to git clone the
 3. `mv ../sacrum ../new-name` essentially renames the folder to "new-name"
 4. `git init` creates a new git repo or follow git-lab instructions
 
-Getting Started - Advanced 
---------------------------
+Running the Builder - First Steps - Advanced 
+--------------------------------------------
+After you have renamed the project for your own uses or if you wanna just try it out as is:
+
 1.`npm install`
 2.`grunt dev:server`
 
-Getting Started - Beginner Mac OS 
----------------------------------
+The second command should automatically open up a tab in your default browser to the port that is servering the app.
+
+Running the Builder - Very First Steps - Beginner Mac OS 
+--------------------------------------------------------
 - do you have XCode installed?
 - do you have homebrew installed?
+- do you have git installed?
 - do you have npm (with node) installed globally?
 - do you have grunt-cli installed globally?
-Once you can answer yes to every item move on to 'Getting Started - Advanced'
+Once you can answer yes to every item move on to 'First Steps - Advanced'
 
-Getting Started - Beginner Linux OS 
----------------------------------
+Running the Builder - Very First Steps - Beginner Linux OS 
+----------------------------------------------------------
 If you are cool enough to be running a distro of Linux then you don't need me to hold your hand through this. One thins, are you using nvm? Might want to get that tho it is not a strict requirement.
 
 Grunt Tasks
@@ -48,10 +53,10 @@ Grunt Tasks
 All of the grunt tasks are run in the terminal when you are sitting at the root of the project's dirctory.
 
 ### grunt dev
-  This task compiles all the coffee, stylus, and compass files from app and places then in a folder called ".tmp".  The task also automatically runs the `grunt test` command.
+  This task compiles all the coffee, stylus, and compass files from app and places then in a folder called ".tmp" along with vendor scripts, vendor styles, and any files you've written in JavaScript inside "app/".  This task also automatically runs the `grunt test` command.
 
 ### grunt dev:server
-  This task compiles the app and launches a server to view the project on. The task also automatically runs the `grunt test` command.
+  This task compiles the app and launches a server to view the project on. This task also automatically runs the `grunt test` command.
 
 ### grunt test
   This task compiles the app and runs the jasmine test specs written in "test/spec/" via a headless server, phantom.
@@ -60,10 +65,10 @@ All of the grunt tasks are run in the terminal when you are sitting at the root 
   This tasks compiles the app and runs the jasmine test specs in your default browser.
 
 ### grunt build
-  This task compiles the app for a production environment including minification and requirejs optmization and places the files in a folder called "dist".  All the static files have a unqiue hash added to their names - this allows for infinite caching on the browser. The "usemin" task in the Gruntfile should automatically replace references to the new static file names in the index.html and main.css files.  The task also automatically runs the `grunt test` command.
+  This task compiles the app for a production environment including minification and requirejs optmization and places the files in a folder called "dist".  All the static files have a unqiue hash added to their names - this allows for infinite caching on the browser. The "usemin" task in the Gruntfile should automatically replace references to the new static file names in the index.html and main.css files.  This task also automatically runs the `grunt test` command.
 
 ### grunt build:server
-  This task compiles the app for a production environment and creates a server for you to via the built project in your browser. The task also automatically runs the `grunt test` command.
+  This task compiles the app for a production environment and creates a server for you to via the built project in your browser. This task also automatically runs the `grunt test` command.
 
 * * *
 
