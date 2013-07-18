@@ -12,12 +12,12 @@ Todos
 Getting Started
 ===============
 
-If you'd like to develope a project using this template be sure to git clone the repo, remove the .git file, and start a new git repositiory.
+If you'd like to develop a project using this template be sure to git clone the repo, remove the .git file, and start a new git repositiory.
 
 1. `git clone git@git-lab.evolvingmedia.org:sacrum.git` clones the repo down to your box
 2. `cd sacrum && rm -rf .git` deletes the folder '.git' with flags -r for recursive and -f for force (a lot of files in .git don't like to be deleted) 
 3. `mv ../sacrum ../new-name` essentially renames the folder to "new-name"
-4. `git init` creates a new git repo or follow git-lab instructions
+4. `git init` creates a new git repo (you can also follow the git-lab instructions)
 
 Running the Builder - First Steps - Advanced 
 --------------------------------------------
@@ -35,11 +35,12 @@ Running the Builder - Very First Steps - Beginner Mac OS
 - do you have git installed?
 - do you have npm (with node) installed globally?
 - do you have grunt-cli installed globally?
+
 Once you can answer yes to every item move on to 'First Steps - Advanced'
 
 Running the Builder - Very First Steps - Beginner Linux OS 
 ----------------------------------------------------------
-If you are cool enough to be running a distro of Linux then you don't need me to hold your hand through this. One thins, are you using nvm? Might want to get that tho it is not a strict requirement.
+If you are cool enough to be running a distro of Linux then you don't need me to hold your hand through this. One thing, are you using nvm? Might want to get that tho it is not a strict requirement.
 
 Grunt Tasks
 -----------
