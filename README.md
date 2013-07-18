@@ -7,20 +7,21 @@ TODO
 - wire up use of almond on build (grunt-usemin v2 will support this)
 - Extend documentation
 
+* * *
 Getting Started
 ===============
 
 If you'd like to develope a project using this template be sure to git clone the repo, remove the .git file, and start a new git repositiory.
 
-1. ````git clone git@git-lab.evolvingmedia.org:sacrum.git''''
-2. ````rm -rf .git''''
-3. ````rename folder''''
-4. ````git init or follow git-lab instructions''''
+1. `git clone git@git-lab.evolvingmedia.org:sacrum.git`
+2. `rm -rf .git`
+3. `rename folder`
+4. `git init or follow git-lab instructions`
 
 Getting Started - Advanced 
 --------------------------
-1.````npm install````
-2.````grunt dev:server````
+1.`npm install`
+2.`grunt dev:server`
 
 Getting Started - Beginner Mac OS 
 ---------------------------------
@@ -38,18 +39,18 @@ Grunt Tasks
 -----------
 `grunt dev`
 `grunt dev:server`
-````grunt test````
-````grunt test:server````
-````grunt build````
-````grunt build:server````
+`grunt test`
+`grunt test:server`
+`grunt build`
+`grunt build:server`
 
 All of the grunt tasks are run in the terminal when you are sitting at the root of the project's dirctory.
 
 ### grunt dev
-  This task compiles all the coffee, stylus, and compass files from app and places then in a folder called ".tmp".  The task also automatically runs the ````grunt test```` command.
+  This task compiles all the coffee, stylus, and compass files from app and places then in a folder called ".tmp".  The task also automatically runs the `grunt test` command.
 
 ### grunt dev:server
-  This task compiles the app and launches a server to view the project on. The task also automatically runs the ````grunt test```` command.
+  This task compiles the app and launches a server to view the project on. The task also automatically runs the `grunt test` command.
 
 ### grunt test
   This task compiles the app and runs the jasmine test specs written in "test/spec/" via a headless server, phantom.
@@ -58,11 +59,12 @@ All of the grunt tasks are run in the terminal when you are sitting at the root 
   This tasks compiles the app and runs the jasmine test specs in your default browser.
 
 ### grunt build
-  This task compiles the app for a production environment including minification and requirejs optmization and places the files in a folder called "dist".  All the static files have a unqiue hash added to their names - this allows for infinite caching on the browser. The "usemin" task in the Gruntfile should automatically replace references to the new static file names in the index.html and main.css files.  The task also automatically runs the ````grunt test```` command.
+  This task compiles the app for a production environment including minification and requirejs optmization and places the files in a folder called "dist".  All the static files have a unqiue hash added to their names - this allows for infinite caching on the browser. The "usemin" task in the Gruntfile should automatically replace references to the new static file names in the index.html and main.css files.  The task also automatically runs the `grunt test` command.
 
 ### grunt build:server
-  This task compiles the app for a production environment and creates a server for you to via the built project in your browser. The task also automatically runs the ````grunt test```` command.
+  This task compiles the app for a production environment and creates a server for you to via the built project in your browser. The task also automatically runs the `grunt test` command.
 
+* * *
 Sacrum's Structure
 ==================
 
@@ -89,13 +91,14 @@ vendor/
   The dist folder is where the built app is placed. This folder can be rsync'ed to the server where this app is hosted.  A bash script "deploy.sh" has been added to this project to template what your rsync script might look like. This folder is not tracked in the git repo.
 
 ### node_modules/
-  The node_modules folder contains all the node modules used by the builder (grunt).  This folder and its contents are added once you run ````npm install''''.  This folder is not tracked in the git repo.
+  The node_modules folder contains all the node modules used by the builder (grunt).  This folder and its contents are added once you run `npm install'.  This folder is not tracked in the git repo.
   
 ### test/
   The test folder
 
 ### vendor/
 
+* * *
 Packages and Libraries Used
 ===========================
 
