@@ -1,11 +1,11 @@
 Sacrum Documentation
 ====================
 
-TODO
-====
-- dry up copy tasks 
+Todos
+----
+- dry up grunt copy tasks 
 - wire up use of almond on build (grunt-usemin v2 will support this)
-- Extend documentation
+
 
 * * *
 
