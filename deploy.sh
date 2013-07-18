@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET=static:/srv/iefm2/site/
+TARGET=dev-server-name:/path/to/site/
 if [ "$1" == "production" ] ; then
   TARGET=production-server-name:/path/to/site/
 elif [ "$1" == "dev" ] ; then
