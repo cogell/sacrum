@@ -36,8 +36,8 @@ If you are cool enough to be running a distro of Linux then you don't need me to
 
 Grunt Tasks
 -----------
-````grunt dev````
-````grunt dev:server````
+`grunt dev`
+`grunt dev:server`
 ````grunt test````
 ````grunt test:server````
 ````grunt build````
@@ -68,7 +68,7 @@ Sacrum's Structure
 
 Main File
 ---------
-The main file is located at the root, named Gruntfile.js.
+The main file is located at the root, named *Gruntfile.js*.
 
 Directory Structure
 -------------------
