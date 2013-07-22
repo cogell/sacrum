@@ -3,7 +3,9 @@ Sacrum Documentation
 
 Todos
 ----
-- dry up grunt copy tasks 
+- fix livereload - not working on first load of index
+- fix watch tasks from slowing down
+- dry up grunt copy tasks (need to learn more grunt-fu to do this)
 - wire up use of almond on build (grunt-usemin v2 will support this)
 
 
@@ -150,3 +152,14 @@ Node Modules
 - grunt-template-jasmine-requirejs
 - grunt-usemin
 - matchdep
+
+VERSION
+=======
+
+0.0.1 - fixes depreciated livereload and problems with coffee compiling distination
+      - coffee now compiles with the correct dest structure on `grunt dev` tasks
+      - coffee now compiles with the correct dest structure on `grunt build` tasks (note: coffee with r.js untested)
+      - fixes compass compaining when there there is no main.scss file
+      - wires up handlebars.runtime in require config (note: compiled templates and runtime library untested)
+      - wires up imagemin to convert non-progressive jpegs to progressive format
+0.0.0 - shared with team to test use in the wild

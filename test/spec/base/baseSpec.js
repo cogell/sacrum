@@ -1,3 +1,5 @@
+/* you can delete this file */
+
 describe('The vendor scripts', function(){
 
   it('has jquery defined', function(){

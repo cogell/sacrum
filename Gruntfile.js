@@ -1,6 +1,6 @@
 'use strict';
 
-var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+// var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 
 var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
@@ -27,6 +27,9 @@ module.exports = function (grunt){
 
     // WATCH THESE FILES WITH THESE TASKS //
     watch:{
+      options: {
+        livereload: true,
+      },
       stylus: {
         files: ['<%= sacrum.app %>/styles/**/*.styl'],
         tasks: ['stylus:dev']
@@ -39,14 +42,14 @@ module.exports = function (grunt){
         files: ['<%= sacrum.app %>/styles/**/*.scss'],
         tasks: ['compass:dev']
       },
-      livereload: {
+      concurrent: {
         files: [
           '<%= sacrum.app %>/assets/*.html',
           '{.tmp,<%= sacrum.app %>}/styles/*.css',
           '<%= sacrum.app %>/scripts/**/*.js',
           '<%= sacrum.app %>/images/*.{png,jpg,jepg,gif,webp,svg}'
         ],
-        tasks: ['livereload']
+        tasks: ['concurrent:devCopy']
       },
       jasmine: {
         files: ['<%= sacrum.app %>/scripts/**/*.js', 'test/spec/**/*.js'],
@@ -69,8 +72,8 @@ module.exports = function (grunt){
           hostname: 'localhost',
           middleware: function (connect) {
             return [
-              lrSnippet,
-              mountFolder(connect, '.tmp')
+              // lrSnippet,
+              mountFolder(connect, '.tmp'),
             ];
           }
         }
@@ -81,7 +84,7 @@ module.exports = function (grunt){
           hostname: 'localhost',
           middleware: function (connect) {
             return [
-              lrSnippet,
+              // lrSnippet,
               // mountFolder(connect, '<%= sacrum.dist %>')
               mountFolder(connect, 'dist')
             ];
@@ -168,16 +171,18 @@ module.exports = function (grunt){
       dev: {
         files: [{
           expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
-          src: '<%= sacrum.app %>/scripts/**/*.coffee',
-          dest: '.tmp/css',
+          cwd: '<%= sacrum.app %>',
+          src: '**/*.coffee',
+          dest: '.tmp/js',
           ext: '.js'
         }]
       },
       dist: {
         files: [{
           expand: true, // about expand option: http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
-          src: '<%= sacrum.app %>/scripts/**/*.coffee',
-          dest: 'dist/css',
+          cwd: '<%= sacrum.app %>',
+          src: '**/*.coffee',
+          dest: 'dist/js',
           ext: '.js'
         }]
       }
@@ -188,8 +193,8 @@ module.exports = function (grunt){
       options: {
         sassDir: '<%= sacrum.app %>/styles',
         relativeAssets: true,
-        debugInfo: false,
-        specify: ['<%= sacrum.app %>/styles/main.scss']
+        debugInfo: false
+        // specify: ['<%= sacrum.app %>/styles/main.scss']
       },
       dev: {
         options: {
@@ -200,6 +205,57 @@ module.exports = function (grunt){
         options: {
           cssDir: '<%= sacrum.dist %>/css'
         }
+      }
+    },
+
+
+    // This tasks converts all non-progressive jpegs to progressive format this
+    // is considered a modern browser best practice http://blog.patrickmeenan.com/2013/06/progressive-jpegs-ftw.html
+    imagemin:{
+      dist: {
+        options: {
+          optimizationLevel: 0,
+          progressive: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= sacrum.app %>/assets/',
+          src: '**/*.jpg',
+          dest: '<%= sacrum.dist %>'
+        }]
+      }
+    },
+
+    // This task compiles all hanldbars templates with the extension .hbs to
+    // .js files for faster consumption and smaller handlebars.runtime library
+    handlebars: {
+      dev: {
+        options: {
+          // namespace: 'JST', // this is the default
+          amd: true            // dont really know how this works yet :)
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          cwd: 'app/',
+          src: ['**/*.hbs'],
+          dest: '.tmp/js/templates/',
+          ext: '.js'
+        }]
+      },
+      dist: {
+        options: {
+          // namespace: 'JST', // this is the default
+          amd: true            // dont really know how this works yet :)
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          cwd: 'app/',
+          src: ['**/*.hbs'],
+          dest: '<%= sacrum.dist %>/js/templates/',
+          ext: '.js'
+        }]
       }
     },
 
@@ -378,7 +434,6 @@ module.exports = function (grunt){
 
     // This task adds unqiue content hash to the start of all targeted files
     // use this task in conjuction with usemin to src new file names
-    // NOT CONFIGURED
     rev: {
       options: {
         encoding: 'utf8',
@@ -389,41 +444,6 @@ module.exports = function (grunt){
         src: [
           '<%= sacrum.dist %>/**/*.{js,css,png,jpg}'
         ]
-      }
-    },
-
-    // //////////
-    // COMEBACK AND ADD IMAGE MIN
-    // //////////
-
-    handlebars: {
-      dev: {
-        options: {
-          // namespace: 'JST', // this is the default
-          amd: true            // dont really know how this works yet :)
-        },
-        files: [{
-          expand: true,
-          flatten: true,
-          cwd: 'app/',
-          src: ['**/*.hbs'],
-          dest: '.tmp/js/templates/',
-          ext: '.js'
-        }]
-      },
-      dist: {
-        options: {
-          // namespace: 'JST', // this is the default
-          amd: true            // dont really know how this works yet :)
-        },
-        files: [{
-          expand: true,
-          flatten: true,
-          cwd: 'app/',
-          src: ['**/*.hbs'],
-          dest: '<%= sacrum.dist %>/js/templates/',
-          ext: '.js'
-        }]
       }
     },
 
@@ -476,7 +496,6 @@ module.exports = function (grunt){
     'clean:tmp',
     'concurrent:devCompile',
     'concurrent:devCopy',
-    'livereload-start',
     'connect:livereload',
     'open:server',
     'test',
@@ -487,12 +506,12 @@ module.exports = function (grunt){
     'clean:dist',               // clear previous build
     'concurrent:distCompile',   // compile all files
     'concurrent:distCopy',      // copy all targeted files to sacrum.dist
+    'imagemin:dist',            // image conversion
     'useminPrepare',
     'test',                     // run all tests
     'requirejs:dist',           // run require optimization
     'rev',
     'usemin',
-                                // image compression
     'clean:postBuild'           // clear out unwanted folders left over from optimization
   ]);
 
@@ -501,7 +520,6 @@ module.exports = function (grunt){
   grunt.registerTask('build:server',[
     'build',
 
-    'livereload-start',
     'connect:build',
     'open:server',
     'watch:build'
@@ -522,7 +540,6 @@ module.exports = function (grunt){
     // ADD JS LINT CHECK SOMEWHERE
     'concurrent:devCopy',
     'jasmine:test:build',
-    'livereload-start',
     'connect:testBrowser',
     'open:testBrowser',
     'watch'
