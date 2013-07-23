@@ -6,8 +6,7 @@ v0.0.1
 
 Todos
 ----
-- check to see if files are getting reloaded twice (seems to be a freq problem)
-- check if scripts living in app/scripts is a dependency
+- check if styles living in app/styles is a dependency
 - dry up grunt copy tasks (need to learn more grunt-fu to do this)
 
 
