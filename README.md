@@ -1,12 +1,13 @@
 Sacrum Documentation
 ====================
 
+v0.0.1
+----
+
 Todos
 ----
-- fix livereload - not working on first load of index
 - fix watch tasks to track the right files
 - dry up grunt copy tasks (need to learn more grunt-fu to do this)
-- wire up use of almond on build (grunt-usemin v2 will support this)
 
 
 * * *
