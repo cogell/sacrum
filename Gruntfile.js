@@ -49,14 +49,21 @@ module.exports = function (grunt){
         files: ['<%= sacrum.app %>/styles/**/*.scss'],
         tasks: ['compass:dev']
       },
-      concurrent: {
-        files: [
-          '<%= sacrum.app %>/assets/*.html',
-          '{.tmp,<%= sacrum.app %>}/styles/*.css',
-          '<%= sacrum.app %>/scripts/**/*.js',
-          '<%= sacrum.app %>/images/*.{png,jpg,jepg,gif,webp,svg}'
-        ],
-        tasks: ['concurrent:devCopy']
+      copyAssets: {
+        files: ['<%= sacrum.app %>/assets/**/*.{png,jpg,jepg,gif,webp,svg,html}'],
+        tasks: ['copy:assets2tmp']
+      },
+      copyScripts: {
+        files: ['<%= sacrum.app %>/**/*.js'],
+        tasks: ['copy:scripts2tmp']
+      },
+      copyStyles: {
+        files: ['<%= sacrum.app %>/**/*.css'],
+        tasks: ['copy:styles2tmp']
+      },
+      copyVendor: {
+        files: ['vendor/**/*.js', 'vendor/**/*.css'],
+        tasks: ['copy:vendor2tmp']
       },
       jasmine: {
         files: ['<%= sacrum.app %>/scripts/**/*.js', 'test/spec/**/*.js'],
@@ -495,6 +502,10 @@ module.exports = function (grunt){
 
   });
 
+    /////////////////////
+   // AUTHORING TASKS //
+  /////////////////////
+
   grunt.registerTask('dev',[
     'clean:tmp',
     'concurrent:devCompile',
@@ -525,7 +536,7 @@ module.exports = function (grunt){
   grunt.registerTask('build:server',[
     'build',
     'connect:build',
-    'open:server'
+    'open:server',
     'watch:build'                // note: no livereload support here
   ]);
 
@@ -536,13 +547,12 @@ module.exports = function (grunt){
     'jasmine:test'
   ]);
 
-  // note: livereload untested here
   grunt.registerTask('test:server',[
     'concurrent:devCopy',
     'jasmine:test:build',
     'connect:testBrowser',
     'open:testBrowser',
-    'watch'
+    'watch'                       // note: livereload untested here
   ]);
 
 };
