@@ -6,8 +6,6 @@ v0.0.1
 
 Todos
 ----
-- fix watch tasks to track the right files - WORKING HERE
-- rename connect:livereload task (it is scary)
 - check to see if files are getting reloaded twice (seems to be a freq problem)
 - check if scripts living in app/scripts is a dependency
 - dry up grunt copy tasks (need to learn more grunt-fu to do this)
@@ -167,4 +165,6 @@ VERSION
       - wires up handlebars.runtime in require config (note: compiled templates and runtime library untested)
       - wires up imagemin to convert non-progressive jpegs to progressive format
       - auto removes the livereload script from the index file when running the `grunt build` tasks
+      - breaks down watch tasks into more modular support
+      - renames connect:livereload task to more aptly connect:tmp
 0.0.0 - shared with team to test use in the wild

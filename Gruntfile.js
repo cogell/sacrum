@@ -83,7 +83,7 @@ module.exports = function (grunt){
         port: 9000,
         hostname: 'localhost'
       },
-      livereload: {
+      tmp: {
         options: {
           port: 9000,
           hostname: 'localhost',
@@ -515,7 +515,7 @@ module.exports = function (grunt){
 
   grunt.registerTask('dev:server',[
     'dev',
-    'connect:livereload',
+    'connect:tmp',
     'watch'
   ]);
 
