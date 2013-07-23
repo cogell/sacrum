@@ -30,6 +30,13 @@ module.exports = function (grunt){
       options: {
         livereload: true,
       },
+      openServer: {
+        files: ['<%= sacrum.app %>/assets/index.html'],
+        tasks: ['open:server'],
+        options: {
+          atBegin: true,
+        }
+      },
       stylus: {
         files: ['<%= sacrum.app %>/styles/**/*.styl'],
         tasks: ['stylus:dev']
@@ -57,7 +64,10 @@ module.exports = function (grunt){
       },
       // dummy task to keep the server running on build:server
       build: {
-        files: ['<%= sacrum.app %>/*.html']
+        files: ['<%= sacrum.app %>/*.html'],
+        options: {
+          livereload: false
+        }
       }
     },
 
@@ -489,16 +499,12 @@ module.exports = function (grunt){
     'clean:tmp',
     'concurrent:devCompile',
     'concurrent:devCopy',
-    'test',
+    // 'test',
   ]);
 
   grunt.registerTask('dev:server',[
-    'clean:tmp',
-    'concurrent:devCompile',
-    'concurrent:devCopy',
+    'dev',
     'connect:livereload',
-    'open:server',
-    'test',
     'watch'
   ]);
 
@@ -507,26 +513,22 @@ module.exports = function (grunt){
     'concurrent:distCompile',   // compile all files
     'concurrent:distCopy',      // copy all targeted files to sacrum.dist
     'imagemin:dist',            // image conversion
-    'useminPrepare',
+    'useminPrepare',            // get a handle on all references before names change
     'test',                     // run all tests
     'requirejs:dist',           // run require optimization
-    'rev',
-    'usemin',
+    'rev',                      // add a unique hash to the name of every static file
+    'usemin',                   // replace references to static files with new names
     'clean:postBuild'           // clear out unwanted folders left over from optimization
   ]);
 
-  // CREATE A SERVER BUILD TASK
 
   grunt.registerTask('build:server',[
     'build',
-
     'connect:build',
-    'open:server',
-    'watch:build'
+    'open:server'
+    'watch:build'                // note: no livereload support here
   ]);
 
-  // This task runs starts up a server and
-  // runs all the tests specs written in the test folder
   grunt.registerTask('test',[
     // ADD JS LINT CHECK SOMEWHERE
     'concurrent:devCopy',
@@ -534,10 +536,8 @@ module.exports = function (grunt){
     'jasmine:test'
   ]);
 
-  // sometimes you want console log an object from a test spec
-  // and play with it in the browser console
+  // note: livereload untested here
   grunt.registerTask('test:server',[
-    // ADD JS LINT CHECK SOMEWHERE
     'concurrent:devCopy',
     'jasmine:test:build',
     'connect:testBrowser',
