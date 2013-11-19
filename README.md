@@ -4,13 +4,6 @@ Sacrum Documentation
 v0.0.1
 ----
 
-Todos
-----
-- check if styles living in app/styles is a dependency
-- add kalei styleguide
-- add docco javascript quick documentation tool
-
-
 * * *
 
 Getting Started
@@ -18,10 +11,10 @@ Getting Started
 
 If you'd like to develop a project using this template be sure to git clone the repo, remove the .git file, and start a new git repositiory.
 
-1. `git clone git@git-lab.evolvingmedia.org:sacrum.git` clones the repo down to your box
+1. `git clone git@github.com:cogell/sacrum.git` clones the repo down to your box
 2. `cd sacrum && rm -rf .git` deletes the folder '.git' with flags -r for recursive and -f for force (a lot of files in .git don't like to be deleted) 
 3. `mv ../sacrum ../new-name` essentially renames the folder to "new-name"
-4. `git init` creates a new git repo (you can also follow the git-lab instructions)
+4. `git init` creates a new git repo (you can also follow the github instructions)
 
 Running the Builder - First Steps - Advanced 
 --------------------------------------------
@@ -154,6 +147,12 @@ Node Modules
 - grunt-template-jasmine-requirejs
 - grunt-usemin
 - matchdep
+
+Todos
+=====
+- check if styles living in app/styles is a dependency
+- add kalei styleguide
+- add docco javascript quick documentation tool
 
 VERSION
 =======
