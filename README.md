@@ -7,7 +7,8 @@ v0.0.1
 Todos
 ----
 - check if styles living in app/styles is a dependency
-- dry up grunt copy tasks (need to learn more grunt-fu to do this)
+- add kalei styleguide
+- add docco javascript quick documentation tool
 
 
 * * *
